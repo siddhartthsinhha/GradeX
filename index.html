@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GradeX – Internal & CGPA Predictor 2026</title>
+
+<style>
+body{
+ margin:0;
+ font-family:'Segoe UI';
+ background:linear-gradient(135deg,#e0f2fe,#ede9fe,#fff7ed);
+ color:#0f172a;
+}
+
+/* ===== BACKGROUND LOGO ===== */
+.logoBg{
+ position:fixed;
+ inset:0;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ z-index:-1;
+ pointer-events:none;
+ opacity:.08;
+}
+.logoBg img{
+ max-width:1000px;
+}
+
+/* ===== HEADER ===== */
+header{
+ background:#2563eb;
+ color:white;
+ padding:16px;
+ text-align:center;
+}
+.brand{
+ font-size:30px;
+ font-weight:800;
+}
+
+/* ===== LAYOUT ===== */
+.container{
+ display:flex;
+ gap:20px;
+ padding:20px;
+}
+
+/* two boxes */
+.box{
+ flex:1;
+ background:white;
+ border-radius:22px;
+ padding:16px;
+ box-shadow:0 12px 30px rgba(0,0,0,.18);
+}
+
+/* ===== ROW ===== */
+.row{
+ border:1px solid #e2e8f0;
+ background:#f0f7ff;
+ padding:12px;
+ border-radius:16px;
+ margin-bottom:12px;
+ transition:.3s;
+}
+.row:hover{
+ transform:translateY(-2px);
+ background:#e0f2fe;
+}
+
+label{font-weight:700;}
+
+select,input{
+ width:100%;
+ padding:9px;
+ border-radius:14px;
+ border:1px solid #cbd5e1;
+ margin-top:6px;
+ font-size:16px;
+}
+
+button{
+ width:100%;
+ padding:12px;
+ border:none;
+ border-radius:18px;
+ font-size:18px;
+ font-weight:800;
+ cursor:pointer;
+ background:#2563eb;
+ color:white;
+ transition:.3s;
+}
+button:hover{transform:scale(1.02);}
+
+.result{
+ margin-top:8px;
+ padding:10px;
+ border-radius:14px;
+ background:#e0f2fe;
+ font-weight:bold;
+}
+
+@media(max-width:900px){
+ .container{flex-direction:column;}
+}
+
+
+
+</style>
+</head>
+
+<body>
+
+<!-- background logo -->
+
+
+
+<div class="logoBg">
+ <img src="297a3f2c-9737-4510-9f9b-f682de0457f3.jpeg" alt="GradeX Logo"/>
+</div>
+
+<header>
+ <div class="brand">GradeX – GGSIPU Predictor 2026</div>
+</header>
+
+<div class="container">
+
+<!-- ========== INTERNAL MARKS BOX ========== -->
+<div class="box">
+<h2>Single Subject Internal (Only Marks)</h2>
+
+<div class="row">
+<label>Choose Subject *</label>
+<select id="in_subject">
+<option value="">Select Subject</option>
+<option value="Applied Mathematics-1">Applied Mathematics-1</option>
+<option value="Applied Physics-1">Applied Physics-1</option>
+<option value="Electrical Science">Electrical Science</option>
+<option value="Applied Chemistry">Applied Chemistry</option>
+<option value="Communication Skills">Communication Skills</option>
+<option value="Manufacturing Process">Manufacturing Process</option>
+<option value="Programming in C">Programming in C</option>
+</select>
+</div>
+
+<div class="row">
+<label>Mid Sem (0–30)</label>
+<input type="number" id="in_mid" max="30"
+ oninput="if(this.value>30)this.value=30"/>
+</div>
+
+<div class="row">
+<label>Attendance %</label>
+<input type="number" id="in_attendance" max="100"/>
+</div>
+
+<div class="row">
+<label>Class Test</label>
+<select id="in_ct">
+ <option value="bad">Bad</option>
+ <option value="good">Good</option>
+ <option value="verygood">Very Good</option>
+ <option value="excellent">Excellent</option>
+</select>
+</div>
+
+<button onclick="in_calculate()">Calculate Internal</button>
+
+<div class="result" id="in_result"></div>
+</div>
+
+
+<!-- ========== CGPA PREDICTOR BOX – RIGHT SIDE ========== -->
+<div class="box">
+<h2>CGPA Predictor (Per Subject Full)</h2>
+
+<div class="row">
+<label>Branch *</label>
+<select id="cg_branch" onchange="cg_render()">
+<option value="">Select Branch</option>
+<option value="CSE">CSE</option>
+<option value="IT">IT</option>
+<option value="ECE">ECE</option>
+<option value="EEE">EEE</option>
+</select>
+</div>
+
+<div id="cg_subjects"></div>
+
+<button onclick="cg_calculate()">Predict CGPA</button>
+
+<div class="result" id="cg_result"></div>
+
+</div>
+</div>
+
+
+<script>
+/* ===== SUBJECT DATA PER BRANCH ===== */
+const subjectsData={
+ CSE:["Applied Mathematics-1","Applied Physics-1","Environment Science","Manufacturing Process","Programming in C"],
+ IT:["Applied Mathematics-1","Applied Physics-1","Applied Chemistry","Manufacturing Process","Electrical Science","Communication Skills"],
+ ECE:["Applied Mathematics-1","Applied Physics-1","Electrical Science","Applied Chemistry","Communication Skills"],
+ EEE:["Applied Mathematics-1","Applied Physics-1","Environment Science","Manufacturing Process","Programming in C"]
+};
+
+/* ===== ATTENDANCE SCALE (5 MARKS) ===== */
+function attendanceConvert(p){
+ if(p>=90)return 5;
+ if(p>=75)return 4;
+ if(p>=50)return 3;
+ if(p>=30)return 2;
+ if(p>=20)return 1;
+ return 0;
+}
+
+/* ===== CLASS TEST SCALE (1–4) ===== */
+function ctConvert(v){
+ if(v==='bad')return 1;
+ if(v==='good')return 2;
+ if(v==='verygood')return 3;
+ if(v==='excellent')return 4;
+ return 0;
+}
+
+/* ===== INTERNAL CALCULATION – ONLY SELECTED SUBJECT ===== */
+function in_calculate(){
+ const sub=document.getElementById("in_subject").value;
+ const mid=+document.getElementById("in_mid").value||0;
+ const att=+document.getElementById("in_attendance").value||0;
+ const ct=document.getElementById("in_ct").value;
+
+ if(!sub){
+  in_result.innerHTML="Please select subject";
+  return;
+ }
+
+ const internal40 = mid + attendanceConvert(att)
+                        + ctConvert(ct);
+
+ document.getElementById("in_result").innerHTML=
+    `${sub}<br>Internal Marks: ${internal40} / 40`;
+}
+
+/* ===== RENDER CGPA INPUTS PER SUBJECT ===== */
+function cg_render(){
+ const br=document.getElementById("cg_branch").value;
+ let h="";
+ if(!br)return;
+
+ subjectsData[br].forEach((s,i)=>{
+  h+=`
+  <div class="row">
+
+   <label>${s} – Mid Sem (0–30)</label>
+   <input type="number" class="cg_mid" max="30"
+    oninput="if(this.value>30)this.value=30"/>
+
+   <label>${s} – End Sem (0–60)</label>
+   <input type="number" class="cg_end" max="60"
+    oninput="if(this.value>60)this.value=60"/>
+
+   <label>${s} – Attendance %</label>
+   <input type="number" class="cg_att" max="100"/>
+
+   <label>${s} – Class Test</label>
+   <select class="cg_ct">
+     <option value="bad">Bad</option>
+     <option value="good">Good</option>
+     <option value="verygood">Very Good</option>
+     <option value="excellent">Excellent</option>
+   </select>
+
+   <div class="result" id="cg_sub${i}"></div>
+
+  </div>`;
+ });
+
+ document.getElementById("cg_subjects").innerHTML=h;
+}
+
+/* ===== CGPA CALCULATION – CREDIT BASED WEIGHTED ===== */
+function gradePoint(total){
+ return Math.min(total/10, 10);
+}
+
+function cg_calculate(){
+
+ const br=document.getElementById("cg_branch").value;
+ const mids=document.querySelectorAll(".cg_mid");
+ const ends=document.querySelectorAll(".cg_end");
+ const atts=document.querySelectorAll(".cg_att");
+ const cts=document.querySelectorAll(".cg_ct");
+
+ let creditTotal=0;
+ let weightedPoints=0;
+ let count=0;
+
+ for(let i=0;i<mids.length;i++){
+
+  const mid=+mids[i].value||0;
+  const end=+ends[i].value||0;
+
+  const attendance5 = attendanceConvert(+atts[i].value||0);
+  const ctMarks = ctConvert(cts[i].value);
+
+  /* internal 40 per subject */
+  const internal40 = mid + attendance5 + ctMarks;
+
+  const total = mid + end + internal40;
+
+  const GP = gradePoint(total);
+  const credit = 3;
+
+  weightedPoints += GP * credit;
+  creditTotal += credit;
+
+  document.getElementById("cg_sub"+i).innerHTML=
+       "Internal: "+ internal40 +" / 40";
+
+  count++;
+ }
+
+ if(count===0) return;
+
+ const cgpa = weightedPoints / creditTotal;
+
+ document.getElementById("cg_result").innerHTML=
+   "Predicted CGPA: "+ cgpa.toFixed(2);
+
+}
+
+</script>
+
+</body>
+</html>
