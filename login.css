@@ -1,0 +1,108 @@
+*{
+  box-sizing: border-box; /* 🔥 MOST IMPORTANT FIX */
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
+  background:linear-gradient(135deg,#2563eb,#60a5fa);
+  font-family:Segoe UI, sans-serif;
+}
+
+/* 🔹 Login Card */
+.loginBox{
+  background:#ffffff;
+  padding:30px;
+  width:320px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,.2);
+  overflow:hidden; /* safety */
+}
+
+.loginBox h2{
+  margin-bottom:20px;
+  font-weight:600;
+}
+
+/* 🔹 Inputs */
+input{
+  width:100%;
+  padding:14px 16px;
+  margin:10px 0;
+  border-radius:14px;
+  border:1px solid #d1d5db;
+  font-size:15px;
+  outline:none;
+}
+
+input:focus{
+  border-color:#2563eb;
+}
+
+/* 🔹 Password box */
+.passBox{
+  position:relative;
+  width:100%;
+}
+
+.passBox input{
+  padding-right:48px; /* 👁 space */
+}
+
+/* 🔹 Eye icon */
+.passBox .eye{
+  position:absolute;
+  right:16px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  font-size:18px;
+  color:#6b7280;
+  user-select:none;
+}
+
+.passBox .eye:hover{
+  color:#2563eb;
+}
+
+/* 🔹 Button */
+button{
+  width:100%;
+  padding:14px;
+  margin-top:15px;
+  background:#2563eb;
+  color:#ffffff;
+  border:none;
+  border-radius:14px;
+  font-weight:600;
+  font-size:15px;
+  cursor:pointer;
+}
+
+button:disabled{
+  opacity:0.7;
+  cursor:not-allowed;
+}
+
+/* 🔹 Links */
+.link{
+  margin-top:12px;
+  font-size:14px;
+  color:#2563eb;
+  cursor:pointer;
+}
+
+.link:hover{
+  text-decoration:underline;
+}
+
+/* 🔹 Error text */
+.error{
+  margin-top:10px;
+  color:#ef4444;
+  font-size:13px;
+}

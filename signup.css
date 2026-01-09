@@ -1,0 +1,58 @@
+body{
+ height:100vh;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ background:linear-gradient(135deg,#2563eb,#60a5fa);
+ font-family:Segoe UI;
+}
+
+.card{
+ background:white;
+ padding:30px;
+ width:320px;
+ border-radius:20px;
+ box-shadow:0 20px 40px rgba(0,0,0,.2);
+ text-align:center;
+}
+
+h2{margin-bottom:20px;}
+
+input{
+ width:100%;
+ padding:10px;
+ margin:8px 0;
+ border-radius:10px;
+ border:1px solid #ccc;
+}
+
+.passBox{
+ position:relative;
+}
+
+.passBox span{
+ position:absolute;
+ right:12px;
+ top:50%;
+ transform:translateY(-50%);
+ cursor:pointer;
+}
+
+button{
+ width:100%;
+ padding:12px;
+ margin-top:15px;
+ background:#2563eb;
+ color:white;
+ border:none;
+ border-radius:12px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.link{
+ margin-top:15px;
+ color:#2563eb;
+ cursor:pointer;
+ font-size:14px;
+}

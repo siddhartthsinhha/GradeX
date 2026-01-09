@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GradeX Login</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+<div class="loginBox">
+  <h2>Login to GradeX</h2>
+
+  <input id="email" type="email" placeholder="Email">
+
+  <div class="passBox">
+    <input id="password" type="password" placeholder="Password">
+    <span class="eye" onclick="toggleLoginPass()">👁</span>
+  </div>
+
+  <button id="loginBtn" onclick="login()">Login</button>
+
+  <p class="link" onclick="goSignup()">Create new account</p>
+  <p class="link" onclick="forgotPassword()">Forgot Password?</p>
+
+  <p id="msg" class="error"></p>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+<script src="firebase.js"></script>
+<script src="login.js"></script>
+</body>
+</html>

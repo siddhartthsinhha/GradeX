@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Reset Password – GradeX</title>
+<link rel="stylesheet" href="forgot.css">
+</head>
+<body>
+
+<div class="card">
+ <h2>Forgot Password</h2>
+ <p>Enter your email to reset password</p>
+
+ <input id="email" placeholder="Email">
+
+ <button onclick="reset()">Send Reset Link</button>
+
+ <p class="link" onclick="goLogin()">Back to Login</p>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+<script src="firebase.js"></script>
+<script src="forgot.js"></script>
+</body>
+</html>
